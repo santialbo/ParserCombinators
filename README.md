@@ -1,6 +1,6 @@
 Parser Combinators
 ==================
-Parser combintors are higher order functions which receives patterns as input and returns a new parser as it output.
+Parser combintors are higher order functions which receive patterns as input and return a new parser as their output.
 
 I'm writting this small library for the sake of learning how parser combinators and monads (or computational expresions in F#) work.
 
