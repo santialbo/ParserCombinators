@@ -7,13 +7,13 @@ let AnsiLetterParser = CharParserF (fun c -> let c' = System.Char.ToLower c in c
 
 let DigitCharParser = CharParserF (fun c -> c >= '0' && c <= '9')
 
-let KeyParser =
+let KeyNameParser =
     parse {
         let! x = AnsiLetterParser <|> CharParser '_' 
         let! xs = Many (AnsiLetterParser <|> DigitCharParser <|> CharParser '_')
         return new System.String(x::xs |> List.toArray)
     }
-    |> Between (CharParser '"') (CharParser '"') 
+    
     
 let ScapedString =
     let EscapedChars = [('t', '\t'); ('n', '\n'); ('r', '\r'); ('"', '"')] |> Map.ofList

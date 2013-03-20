@@ -57,3 +57,25 @@ type ``Float parsing``() =
         Assert.AreEqual((Run FloatParser "+.012e-12"), Success(0.012e-12, []))
         Assert.AreEqual((Run FloatParser "-.012E+1"), Success(-0.012e1, []))
         
+
+open ParserCombinators.Json
+
+[<TestFixture>]
+type ``Json key names``() =
+    [<Test>]
+    member x.``Empty string should fail``() =
+        Assert.AreEqual((Run KeyNameParser ""), (Run (pzero |>> string) ""))
+    
+    [<Test>]
+    member x.``One character names``() =
+        Assert.AreEqual((Run KeyNameParser "1"), (Run (pzero |>> string) ""))
+        Assert.AreEqual((Run KeyNameParser "-"), (Run (pzero |>> string) ""))
+        Assert.AreEqual((Run KeyNameParser "_"), Success("_", []))
+        Assert.AreEqual((Run KeyNameParser "a"), Success("a", []))
+    
+    [<Test>]
+    member x.``Valid key names``() =
+        Assert.AreEqual((Run KeyNameParser "_abc"), Success("_abc", []))
+        Assert.AreEqual((Run KeyNameParser "_abc123def456"), Success("_abc123def456", []))
+        Assert.AreEqual((Run KeyNameParser "abc123def456"), Success("abc123def456", []))
+        Assert.AreEqual((Run KeyNameParser "abc-def"), Success("abc",['-'; 'd'; 'e'; 'f']))
