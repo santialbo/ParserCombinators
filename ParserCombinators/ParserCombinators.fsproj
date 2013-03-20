@@ -14,6 +14,7 @@
         <String>AssemblyInfo.fs</String>
         <String>Core.fs</String>
         <String>Json.fs</String>
+        <String>Tests.fs</String>
         <String>Program.fs</String>
       </BuildOrder>
     </BuildOrder>
@@ -43,12 +44,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Program.fs" />
     <Compile Include="Core.fs" />
     <Compile Include="Json.fs" />
+    <Compile Include="Tests.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" />
 </Project>
