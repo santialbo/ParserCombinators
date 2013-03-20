@@ -101,9 +101,11 @@ let WhiteSpaceParser =
     |> Choice
 
 let IntegerParser : Parser<int> =
-    let DigitParser : Parser<int> =
-        CharParserF (fun c -> c >= '0' && c <= '9') |>> (fun c -> int c - int '0')
-    Many1 DigitParser |>> List.reduce (fun x y -> x*10 + y)
+    parse {
+        let! s = (CharParser '+' <|> CharParser '-') <|> preturn '+'
+        let! d = Many1 (CharParserF (fun c -> c >= '0' && c <= '9'))
+        return int (new System.String(s::d |> List.toArray))
+    }
 
 let FloatParser: Parser<float> =
     parse {
