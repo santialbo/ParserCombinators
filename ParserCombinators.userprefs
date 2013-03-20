@@ -1,15 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ParserCombinators/Json.fs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="ParserCombinators/Core.fs">
     <Files>
-      <File FileName="ParserCombinators/Program.fs" Line="20" Column="46" />
-      <File FileName="ParserCombinators/Core.fs" Line="1" Column="1" />
-      <File FileName="ParserCombinators/Json.fs" Line="1" Column="1" />
+      <File FileName="ParserCombinators/Program.fs" Line="13" Column="38" />
+      <File FileName="ParserCombinators/Core.fs" Line="108" Column="1" />
+      <File FileName="ParserCombinators/Json.fs" Line="13" Column="19" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="ParserCombinators" expanded="True" selected="True" />
+          <Node name="ParserCombinators" expanded="True">
+            <Node name="Core.fs" selected="True" />
+          </Node>
         </State>
       </Pad>
       <Pad Id="ClassPad">

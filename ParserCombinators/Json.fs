@@ -29,4 +29,3 @@ let ScapedString =
         return new System.String(xs |> List.toArray)
     }
 
-let N

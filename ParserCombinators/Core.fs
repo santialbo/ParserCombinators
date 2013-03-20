@@ -95,11 +95,33 @@ let rec CharListParser2 (cs: list<char>) =
 let StringParser (s: string) =
     CharListParser (Seq.toList s) |>> (fun cs -> new System.String(cs |> List.toArray))
     
-let DigitParser : Parser<int> =
-    CharParserF (fun c -> c >= '0' && c <= '9') |>> (fun c -> int c - int '0')
+let WhiteSpaceParser =
+    [' '; '\t'; '\n'; '\r']
+    |> List.map CharParser
+    |> Choice
 
 let IntegerParser : Parser<int> =
+    let DigitParser : Parser<int> =
+        CharParserF (fun c -> c >= '0' && c <= '9') |>> (fun c -> int c - int '0')
     Many1 DigitParser |>> List.reduce (fun x y -> x*10 + y)
 
+let FloatParser: Parser<float> =
+    parse {
+        let! s = (CharParser '+' <|> CharParser '-') <|> preturn '+'
+        let! l = Many (CharParserF (fun c -> c >= '0' && c <= '9'))
+        let! d = (parse {
+            let! p = CharParser '.'
+            let! d = Many (CharParserF (fun c -> c >= '0' && c <= '9'))
+            return p::d
+        } <|> preturn [])
+        let! e = (parse {
+            let! e = CharParser 'e' <|> CharParser 'E'
+            let! s = (CharParser '+' <|> CharParser '-') <|> preturn '+'
+            let! x = Many1 (CharParserF (fun c -> c >= '0' && c <= '9'))
+            return e::s::x
+        } <|> preturn [])
+        return float (new System.String(s::(l @ d @ e) |> List.toArray))
+    }
+    
 let Between p1 p2 p =
     p1 >>. p .>> p2
