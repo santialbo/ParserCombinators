@@ -3,11 +3,9 @@ module ParserCombinators.Json
 
 open ParserCombinators.Core
 
-let AnsiLetterParser = CharParserF (fun c -> let c' = System.Char.ToLower c in c' >= 'a' && c <= 'z')
-
-let DigitCharParser = CharParserF (fun c -> c >= '0' && c <= '9')
-
 let KeyNameParser =
+    let AnsiLetterParser = CharParserF (fun c -> let c' = System.Char.ToLower c in c' >= 'a' && c <= 'z')
+    let DigitCharParser = CharParserF (fun c -> c >= '0' && c <= '9')
     parse {
         let! x = AnsiLetterParser <|> CharParser '_' 
         let! xs = Many (AnsiLetterParser <|> DigitCharParser <|> CharParser '_')
