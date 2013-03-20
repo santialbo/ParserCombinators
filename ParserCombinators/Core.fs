@@ -47,19 +47,19 @@ let (<|>) (p1: Parser<'a>) (p2: Parser<'a>) : Parser<'a> =
 let (|>>) p f : Parser<'b> =
     p >>= (fun x -> preturn (f x))
     
-let rec many p : Parser<list<'a>> =
+let rec Many p : Parser<list<'a>> =
     parse { let! x = p
-            let! xs = (many p)
+            let! xs = (Many p)
             return x :: xs
            } <|> preturn []
 
-let many1 p : Parser<list<'a>> =
+let Many1 p : Parser<list<'a>> =
     parse { let! x = p
-            let! xs = (many p)
+            let! xs = (Many p)
             return x :: xs
           }
 
-let choice ps : Parser<'a> =
+let Choice ps : Parser<'a> =
     Seq.reduce (fun (p1: Parser<'a>) (p2: Parser<'a>) -> p1 <|> p2) ps
     
 let Run (p: Parser<'a>) (s: string) =
@@ -94,12 +94,12 @@ let rec CharListParser2 (cs: list<char>) =
 
 let StringParser (s: string) =
     CharListParser (Seq.toList s) |>> (fun cs -> new System.String(cs |> List.toArray))
-
+    
 let DigitParser : Parser<int> =
     CharParserF (fun c -> c >= '0' && c <= '9') |>> (fun c -> int c - int '0')
 
 let IntegerParser : Parser<int> =
-    many1 DigitParser |>> List.reduce (fun x y -> x*10 + y)
-    
+    Many1 DigitParser |>> List.reduce (fun x y -> x*10 + y)
+
 let Between p1 p2 p =
     p1 >>. p .>> p2
