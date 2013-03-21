@@ -42,7 +42,7 @@ let JsonValueParserRef = ref JsonNullParser
 /// Parses a Json value: null, boolean, number, string, array or object
 let JsonValueParser = (fun stream -> !JsonValueParserRef stream)
 
-/// Parses a Json key-value entry. Example: "name": ""
+/// Parses a Json key-value entry. Example: "name": "santi"
 let JsonKeyValueParser =
     Between (CharParser '"') (CharParser '"') KeyNameParser .>> WhiteSpaceParser
     .>> CharParser ':' .>> WhiteSpaceParser

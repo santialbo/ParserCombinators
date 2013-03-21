@@ -160,23 +160,34 @@ let IntegerParser : Parser<int> =
         return int (new System.String(s::d |> List.toArray))
     }
 
-/// Parses float numbers which match /[+-]?\d+(\.\d*)?([eE][+-]?\d+)?/
+/// Parses float numbers which match /[+-]?(\d+(\.\d*)?|\d*\.\d+)([eE][+-]?\d+)?/
 let FloatParser: Parser<float> =
+    let DigitParser = CharParserF (fun c -> c >= '0' && c <= '9')
     parse {
         let! s = (CharParser '+' <|> CharParser '-') <|> preturn '+'      // [+-]?
-        let! l = Many (CharParserF (fun c -> c >= '0' && c <= '9'))       // \d+
-        let! d = (parse {
-            let! p = CharParser '.'                                       // (\.
-            let! d = Many (CharParserF (fun c -> c >= '0' && c <= '9'))   //  \d*
-            return p::d                                                   //     )?
-        } <|> preturn [])
+        let! l = (parse {                                                 // (
+            let! l = Many1 DigitParser                                    //  \d+
+            let! pd = (parse {                                            //  (
+                let! p = CharParser '.'                                   //   \.
+                let! d = Many DigitParser                                 //   \d*
+                return p::d
+                } <|> preturn [])                                         //  )?
+            return l @ pd
+            } <|>                                                         //  |
+            parse {
+                let! l = Many DigitParser                                 // \d*
+                let! p = CharParser '.'                                   // \.
+                let! d = Many1 DigitParser                                // \d+
+                return l @ p::d
+            }
+        )
         let! e = (parse {
             let! e = CharParser 'e' <|> CharParser 'E'                    // ([eE]
             let! s = (CharParser '+' <|> CharParser '-') <|> preturn '+'  //   [+-]?
             let! x = Many1 (CharParserF (fun c -> c >= '0' && c <= '9'))  //   \d+
             return e::s::x                                                //         )?
         } <|> preturn [])
-        return float (new System.String(s::(l @ d @ e) |> List.toArray))
+        return float (new System.String(s::(l @ e) |> List.toArray))
     }
 
 /// Applies the parsers popen, p and pclose in sequence. It returns the result of p.

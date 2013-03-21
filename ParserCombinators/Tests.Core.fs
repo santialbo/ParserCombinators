@@ -30,6 +30,10 @@ type ``Integer parsing``() =
 [<TestFixture>]
 type ``Float parsing``() =
     [<Test>]
+    member x.``Parsing empty string should fail``() =
+        Assert.AreSame((Run (pzero |>> float) ""), (Run FloatParser ""))
+        
+    [<Test>]
     member x.``Parsing zero``() =
         Assert.AreEqual(Success(0.0, []), (Run FloatParser "0"))
         Assert.AreEqual(Success(0.0, []), (Run FloatParser ".0"))
@@ -47,6 +51,7 @@ type ``Float parsing``() =
     member x.``Floats without leading digits``() =
         Assert.AreEqual(Success(0.012, []), (Run FloatParser ".012"))
         Assert.AreEqual(Success(0.0, []), (Run FloatParser ".0"))
+        Assert.AreEqual(Success(1.0, []), (Run FloatParser "1."))
         Assert.AreEqual(Success(0.012, []), (Run FloatParser "+.012"))
         Assert.AreEqual(Success(-0.012, []), (Run FloatParser "-.012"))
         
@@ -66,6 +71,7 @@ type ``Escaped characters parsing``() =
         Assert.AreEqual(Success('\u1234', []), (Run EscapedUtf16CharParser @"\u1234"))
         Assert.AreEqual(Success('\u1fff', []), (Run EscapedUtf16CharParser @"\U1fff"))
         Assert.AreEqual(Success('\u2ABC', []), (Run EscapedUtf16CharParser @"\U2abc"))
+        
     [<Test>]
     member x.``Other characters``() =
         Assert.AreEqual(Success('\n', []), (Run EscapedCharParser @"\n"))
