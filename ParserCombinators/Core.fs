@@ -128,9 +128,6 @@ let EscapedUtfCharParser n =
         return h.[0]
     }
 
-/// Parses a string for escaped utf characters /\\[uU]\d{2,2}/
-let EscapedUtf8CharParser = EscapedUtfCharParser 2
-
 /// Parses a string for escaped utf characters /\\[uU]\d{4,4}/
 let EscapedUtf16CharParser = EscapedUtfCharParser 4
     
