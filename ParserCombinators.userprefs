@@ -5,7 +5,8 @@
       <File FileName="ParserCombinators/Program.fs" Line="10" Column="1" />
       <File FileName="ParserCombinators/Core.fs" Line="83" Column="1" />
       <File FileName="ParserCombinators/Json.fs" Line="16" Column="1" />
-      <File FileName="ParserCombinators/Tests.Core.fs" Line="12" Column="13" />
+      <File FileName="ParserCombinators/Tests.Core.fs" Line="59" Column="1" />
+      <File FileName="ParserCombinators/Tests.Json.fs" Line="2" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

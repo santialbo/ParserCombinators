@@ -15,6 +15,7 @@
         <String>Core.fs</String>
         <String>Tests.Core.fs</String>
         <String>Json.fs</String>
+        <String>Tests.Json.fs</String>
         <String>Program.fs</String>
       </BuildOrder>
     </BuildOrder>
@@ -54,6 +55,7 @@
     <Compile Include="Core.fs" />
     <Compile Include="Json.fs" />
     <Compile Include="Tests.Core.fs" />
+    <Compile Include="Tests.Json.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" />
 </Project>
