@@ -57,17 +57,29 @@ let (|>>) p f : Parser<'b> =
 
 /// Runs p as many times as posible, returning a list with the results.
 let rec Many p : Parser<list<'a>> =
-    parse { let! x = p
-            let! xs = (Many p)
-            return x :: xs
-           } <|> preturn []
+    parse {
+        let! x = p
+        let! xs = (Many p)
+        return x :: xs
+    } <|> preturn []
 
 /// Runs p as many times as possible with at least one Succcess.
 let Many1 p : Parser<list<'a>> =
-    parse { let! x = p
-            let! xs = (Many p)
-            return x :: xs
-          }
+    parse {
+        let! x = p
+        let! xs = (Many p)
+        return x :: xs
+    }
+
+/// Runs p n times.
+let rec Times n p: Parser<list<'a>> =
+    parse {
+        if n <= 0 then return []
+        else
+            let! x = p
+            let! xs = (Times (n - 1) p)
+            return x::xs
+    }
 
 /// Returns the first successful result of the given parser sequence.
 let Choice ps : Parser<'a> =
