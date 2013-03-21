@@ -59,10 +59,16 @@ type ``Float parsing``() =
         
 
 [<TestFixture>]
-type ``Escaped Utf parsing``() =
+type ``Escaped characters parsing``() =
     [<Test>]
     member x.``Utf16 character``() =
         Assert.AreEqual(Success('@', []), (Run EscapedUtf16CharParser @"\u0040"))
         Assert.AreEqual(Success('\u1234', []), (Run EscapedUtf16CharParser @"\u1234"))
         Assert.AreEqual(Success('\u1fff', []), (Run EscapedUtf16CharParser @"\U1fff"))
         Assert.AreEqual(Success('\u2ABC', []), (Run EscapedUtf16CharParser @"\U2abc"))
+    [<Test>]
+    member x.``Other characters``() =
+        Assert.AreEqual(Success('\n', []), (Run EscapedCharParser @"\n"))
+        Assert.AreEqual(Success('\r', []), (Run EscapedCharParser @"\r"))
+        Assert.AreEqual(Success('\t', []), (Run EscapedCharParser @"\t"))
+        Assert.AreEqual(Success('\\', []), (Run EscapedCharParser @"\\"))

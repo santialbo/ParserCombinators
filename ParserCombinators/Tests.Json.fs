@@ -46,18 +46,21 @@ type ``Json key names parsing``() =
 type ``Json escaped string parsing``() =
     [<Test>]
     member x.``String without escaped characters``() =
-        Assert.AreEqual(Success(JsonString("abc def"), []), (Run EscapedStringParser @"""abc def"""))
+        Assert.AreEqual(Success(JsonString("abc def\nghi"), []), (Run EscapedStringParser "\"abc def\nghi\""))
         
     [<Test>]
     member x.``String with escaped charactters``() =
         Assert.AreEqual(Success(JsonString("\n"), []), (Run EscapedStringParser @"""\n"""))
-        Assert.AreEqual(Success(JsonString("\n"), []), (Run EscapedStringParser @"""\n"""))
-        Assert.AreEqual(Success(JsonString("\n"), []), (Run EscapedStringParser @"""\n"""))
-        
+        Assert.AreEqual(Success(JsonString("\n\t\r"), []), (Run EscapedStringParser @"""\n\t\r"""))
+        Assert.AreEqual(Success(JsonString("abc\ndef\nghi"), []), (Run EscapedStringParser @"""abc\ndef\nghi"""))
+        Assert.AreEqual(Success(JsonString("abc \"def\" ghi"), []), (Run EscapedStringParser @"""abc \""def\"" ghi"""))
+        Assert.AreEqual(Success(JsonString("\u0400\u0500"), []), (Run EscapedStringParser @"""\u0400\u0500"""))
+
+[<TestFixture>]        
+type ``Json key-value pair parsing``() =
     [<Test>]
-    member x.``String with escaped unicode characters``() =
-        Assert.AreEqual(Success(JsonString("\u1234"), []), (Run EscapedStringParser @"""\u1234"""))
-        
+    member x.``Null value``() =
+        Assert.AreEqual(Success(("abc", JsonNull), []), (Run JsonKeyValueParser @"""abc"": null"))
 
 [<TestFixture>]
 type ``Json object parsing``() =
