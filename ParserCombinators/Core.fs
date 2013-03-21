@@ -103,13 +103,24 @@ let CharParserF f: Parser<char> =
         | _ -> Failure
     in p
 
+/// Parses escaped characters in a string /\\[tnrbf"/\]/ and returns the appropiate characterñ   
+let EscapedCharParser =
+    let EscapedChars =
+        [('t', '\t'); ('n', '\n'); ('r', '\r'); ('b', '\b'); ('f', '\f'); ('"', '"'); ('/', '/'); ('\\', '\\')]
+        |> Map.ofList
+    parse {
+        let! i = CharParser '\\'
+        let! c = CharParserF EscapedChars.ContainsKey |>> System.Char.ToLower
+        return EscapedChars.[c]
+    }
+
 /// Helper function to build EscapedUtf_CharParser parsers
 let EscapedUtfCharParser n =
     parse {
         let! i = CharParser '\\' >>. (CharParser 'u' <|> CharParser 'U')
         let! h =
             CharParserF (fun c -> (c >= '0' && c <= '9') || (c >= 'a' && c <='f') || (c >= 'A' && c <='F'))
-            |> Times n
+            |> Times 4
             |>> (fun cs -> new System.String(Array.ofList cs))
             |>> (fun s -> System.Int32.Parse(s, System.Globalization.NumberStyles.HexNumber))
             |>> System.Char.ConvertFromUtf32
@@ -142,6 +153,7 @@ let WhiteSpaceParser =
     [' '; '\t'; '\n'; '\r']
     |> List.map CharParser
     |> Choice
+    |> Many
 
 /// Parses integer number which match /[+-]?\d+/
 let IntegerParser : Parser<int> =

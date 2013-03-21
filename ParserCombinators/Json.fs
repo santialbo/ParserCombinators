@@ -23,42 +23,32 @@ let KeyNameParser =
     
 /// Parses an escaped estring. See http://json.org/string.gif
 let EscapedStringParser =
-    let EscapedChars =
-        [('t', '\t'); ('n', '\n'); ('r', '\r'); ('b', '\b'); ('f', '\f'); ('"', '"'); ('/', '/'); ('\\', '\\')]
-        |> Map.ofList
-        
     let NotEscapedCharParser = CharParserF (fun c -> not (c = '\\' || c = '"'))
-    
-    let EscapedCharsParser =
-        parse {
-            let! i = CharParser '\\'
-            let! c = CharParserF EscapedChars.ContainsKey |>> System.Char.ToLower
-            return EscapedChars.[c]
-        }
-        
     parse {
-        let! xs = Many (NotEscapedCharParser <|> EscapedCharsParser <|> EscapedUtf16CharParser)
+        let! xs = Many (NotEscapedCharParser <|> EscapedCharParser <|> EscapedUtf16CharParser)
         return new System.String(xs |> List.toArray)
     }
     |> Between (CharParser '"') (CharParser '"')
     |>> JsonString
 
-// Parses a Json boolean /true|false/
+/// Parses a Json boolean /true|false/
 let JsonBooleanParser = (StringParser "true" >>% true) <|> (StringParser "false" >>% false) |>> JsonBoolean
 
-// Parses a Json null value /null/
+/// Parses a Json null value /null/
 let JsonNullParser = StringParser "null" >>% JsonNull
 
-// Parses a Json value: null, boolean, number, string, array or object
-let mutable JsonValueParser = preturn JsonNull
+// Creates a reference so we can define the value of the function later in the code.
+let JsonValueParserRef = ref JsonNullParser
+/// Parses a Json value: null, boolean, number, string, array or object
+let JsonValueParser = (fun stream -> !JsonValueParserRef stream)
 
-// Parses a Json key-value entry. Example: "name": "Santi"
+/// Parses a Json key-value entry. Example: "name": ""
 let JsonKeyValueParser =
     Between (CharParser '"') (CharParser '"') KeyNameParser .>> WhiteSpaceParser
     .>> CharParser ':' .>> WhiteSpaceParser
     .>>. JsonValueParser
 
-// Parses a Json array.
+/// Parses a Json array.
 let JsonArrayParser =
     parse {
         let! x = JsonValueParser .>> WhiteSpaceParser
@@ -68,7 +58,7 @@ let JsonArrayParser =
     |> Between (CharParser '[' .>> WhiteSpaceParser) (CharParser ']')
     |>> JsonArray
     
-// Parses a Json object.
+/// Parses a Json object.
 let JsonObjectParser =
     parse {
         let! x = JsonKeyValueParser .>> WhiteSpaceParser
@@ -79,7 +69,7 @@ let JsonObjectParser =
     |> Between (CharParser '{' .>> WhiteSpaceParser) (CharParser '}')
     |>> JsonObject
     
-JsonValueParser <-
+JsonValueParserRef :=
     Choice [JsonNullParser;
             JsonBooleanParser;
             FloatParser |>> JsonNumber;
