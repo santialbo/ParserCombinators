@@ -4,12 +4,12 @@ module ParserCombinators.Json
 type JsonObject = Map<string, JsonValue>
 
 and JsonValue =
-    | Null
-    | Boolean of bool
-    | String of string
-    | Number of float
-    | Array of list<JsonValue>
-    | Object of JsonObject
+    | JsonNull
+    | JsonBoolean of bool
+    | JsonString of string
+    | JsonNumber of float
+    | JsonArray of list<JsonValue>
+    | JsonObject of JsonObject
 
 open ParserCombinators.Core
 
@@ -57,40 +57,40 @@ let EscapedStringParser =
     }
     |> Between (CharParser '"') (CharParser '"')
 
-let BooleanParser = (StringParser "true" >>% true) <|> (StringParser "false" >>% false) |>> Boolean 
+let JsonBooleanParser = (StringParser "true" >>% true) <|> (StringParser "false" >>% false) |>> JsonBoolean 
 
-let NullParser = StringParser "null" >>% Null
+let JsonNullParser = StringParser "null" >>% JsonNull
 
-let mutable ValueParser = preturn Null
+let mutable JsonValueParser = preturn JsonNull
     
-let KeyValueParser =
+let JsonKeyValueParser =
     Between (CharParser '"') (CharParser '"') KeyNameParser .>> WhiteSpaceParser
     .>> CharParser ':' .>> WhiteSpaceParser
-    .>>. ValueParser
+    .>>. JsonValueParser
 
-let ArrayParser =
+let JsonArrayParser =
     parse {
-        let! x = ValueParser .>> WhiteSpaceParser
-        let! xs = Many (CharParser ','  >>. WhiteSpaceParser >>. ValueParser .>> WhiteSpaceParser)
+        let! x = JsonValueParser .>> WhiteSpaceParser
+        let! xs = Many (CharParser ','  >>. WhiteSpaceParser >>. JsonValueParser .>> WhiteSpaceParser)
         return x::xs
     } <|> preturn []
     |> Between (CharParser '[' .>> WhiteSpaceParser) (CharParser ']')
-    |>> Array
+    |>> JsonArray
 
-let ObjectParser =
+let JsonObjectParser =
     parse {
-        let! x = KeyValueParser .>> WhiteSpaceParser
-        let! xs = Many (CharParser ','  >>. WhiteSpaceParser >>. KeyValueParser .>> WhiteSpaceParser)
+        let! x = JsonKeyValueParser .>> WhiteSpaceParser
+        let! xs = Many (CharParser ','  >>. WhiteSpaceParser >>. JsonKeyValueParser .>> WhiteSpaceParser)
         return x::xs
     } <|> preturn []
     |>> Map.ofList
     |> Between (CharParser '{' .>> WhiteSpaceParser) (CharParser '}')
-    |>> Object 
+    |>> JsonObject 
 
-ValueParser <-
-    Choice [BooleanParser;
-            NullParser;
-            FloatParser |>> Number;
-            EscapedStringParser |>> String;
-            ArrayParser;
-            ObjectParser] .>> WhiteSpaceParser
+JsonValueParser <-
+    Choice [JsonBooleanParser;
+            JsonNullParser;
+            FloatParser |>> JsonNumber;
+            EscapedStringParser |>> JsonString;
+            JsonArrayParser;
+            JsonObjectParser] .>> WhiteSpaceParser

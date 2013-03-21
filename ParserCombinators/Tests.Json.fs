@@ -8,9 +8,13 @@ open ParserCombinators.Json
 type ``Null parsing``() =
     [<Test>]
     member x.``Empty string should fail``() =
-        Assert.AreEqual((Run NullParser ""), (Run (pzero >>% Null) ""))
+        Assert.AreEqual((Run JsonNullParser ""), (Run (pzero >>% JsonNull) ""))
         
     [<Test>]
     member x.``Parsing "null"``() =
-        Assert.AreEqual((Run NullParser "null"), Success(Null, []))
-        Assert.AreEqual((Run NullParser "Null"), (Run (pzero >>% Null) ""))
+        Assert.AreEqual((Run JsonNullParser "null"), Success(JsonNull, []))
+        Assert.AreEqual((Run JsonNullParser "Null"), (Run (pzero >>% JsonNull) ""))
+
+
+
+
