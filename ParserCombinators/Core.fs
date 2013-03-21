@@ -103,6 +103,29 @@ let CharParserF f: Parser<char> =
         | _ -> Failure
     in p
 
+/// Helper function to build EscapedUtf_CharParser parsers
+let EscapedUtfCharParser n =
+    parse {
+        let! i = CharParser '\\' >>. (CharParser 'u' <|> CharParser 'U')
+        let! h =
+            CharParserF (fun c -> (c >= '0' && c <= '9') || (c >= 'a' && c <='f') || (c >= 'A' && c <='F'))
+            |> Times n
+            |>> (fun cs -> new System.String(Array.ofList cs))
+            |>> (fun s -> System.Int32.Parse(s, System.Globalization.NumberStyles.HexNumber))
+            |>> System.Char.ConvertFromUtf32
+            |>> Array.ofSeq
+        return h.[0]
+    }
+
+/// Parses a string for escaped utf characters /\\[uU]\d{2,2}/
+let EscapedUtf8CharParser = EscapedUtfCharParser 2
+
+/// Parses a string for escaped utf characters /\\[uU]\d{4,4}/
+let EscapedUtf16CharParser = EscapedUtfCharParser 4
+    
+/// Parses a string for escaped utf characters /\\[uU]\d{8,8}/
+let EscapedUtf32Parser = EscapedUtfCharParser 8
+    
 /// Parses the given string.
 let StringParser (s: string) =
     let rec CharListParser (cs: list<char>) =

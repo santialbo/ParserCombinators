@@ -1,18 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ParserCombinators/Tests.Core.fs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="ParserCombinators/Core.fs">
     <Files>
-      <File FileName="ParserCombinators/Program.fs" Line="10" Column="1" />
-      <File FileName="ParserCombinators/Core.fs" Line="83" Column="1" />
-      <File FileName="ParserCombinators/Json.fs" Line="16" Column="1" />
-      <File FileName="ParserCombinators/Tests.Core.fs" Line="59" Column="1" />
-      <File FileName="ParserCombinators/Tests.Json.fs" Line="2" Column="1" />
+      <File FileName="ParserCombinators/Core.fs" Line="93" Column="34" />
+      <File FileName="ParserCombinators/Json.fs" Line="25" Column="24" />
+      <File FileName="ParserCombinators/Tests.Core.fs" Line="18" Column="44" />
+      <File FileName="ParserCombinators/Tests.Json.fs" Line="53" Column="50" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="ParserCombinators" expanded="True" selected="True">
+          <Node name="ParserCombinators" expanded="True">
             <Node name="References" expanded="True" />
+            <Node name="Core.fs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -25,7 +25,13 @@
       <Pad Id="MonoDevelop.NUnit.TestPad">
         <State expanded="True">
           <Node name="ParserCombinators" expanded="True">
-            <Node name="ParserCombinators" expanded="True" />
+            <Node name="ParserCombinators" expanded="True">
+              <Node name="Tests" expanded="True">
+                <Node name="Json+Boolean parsing" expanded="True" />
+                <Node name="Json+Json escaped string parsing" expanded="True" />
+                <Node name="Json+Json key names parsing" selected="True" />
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>

@@ -29,19 +29,6 @@ let EscapedStringParser =
         
     let NotEscapedCharParser = CharParserF (fun c -> not (c = '\\' || c = '"'))
     
-    let EscapedUnicodeParser =
-        parse {
-            let! i = CharParser '\\' >>. (CharParser 'u' <|> CharParser 'U')
-            let! h =
-                CharParserF (fun c -> (c >= '0' && c <= '9') && (c >= 'a' && c <='f') && (c >= 'A' && c <='F'))
-                |> Times 4
-                |>> (fun cs -> new System.String(Array.ofList cs))
-                |>> (fun s -> System.Int32.Parse(s, System.Globalization.NumberStyles.HexNumber))
-                |>> System.Char.ConvertFromUtf32
-                |>> Array.ofSeq
-            return h.[0]
-        }
-    
     let EscapedCharsParser =
         parse {
             let! i = CharParser '\\'
@@ -50,7 +37,7 @@ let EscapedStringParser =
         }
         
     parse {
-        let! xs = Many (NotEscapedCharParser <|> EscapedCharsParser)
+        let! xs = Many (NotEscapedCharParser <|> EscapedCharsParser <|> EscapedUtf16CharParser)
         return new System.String(xs |> List.toArray)
     }
     |> Between (CharParser '"') (CharParser '"')
