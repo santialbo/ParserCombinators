@@ -84,11 +84,11 @@ type ``Json key-value pair parsing``() =
 type ``Json object parsing``() =
     [<Test>]
     member x.``Parsing empty object``() =
-        Assert.AreEqual(Success(JsonObject(Map.empty), []), (Run JsonObjectParser "{}"))
+        Assert.AreEqual(Success(JsonObject(Map.empty), []), (Run JsonParser "{}"))
         
     [<Test>]
     member x.``Parsing object with 1 key-value pair``() =
-        Assert.AreEqual((Run JsonObjectParser """{"firstName": "John" }"""), Success(JsonObject(Map.ofList ["firstName", JsonString("John")]), []))
+        Assert.AreEqual(Success(JsonObject(Map.ofList ["firstName", JsonString("John")]), []), (Run JsonParser """{"firstName": "John" }"""))
     
     [<Test>]
     member x.``Parsing complex objects``() =
@@ -135,5 +135,10 @@ type ``Json object parsing``() =
                                 Map.ofList [
                                     ("number", JsonString "646 555-4567");
                                     ("type", JsonString "fax")])]))])
-        Assert.AreEqual(Success(expected, []), (Run JsonObjectParser text))
-                                
+        Assert.AreEqual(Success(expected, []), (Run JsonParser text))
+    
+    [<Test>]
+    member x.``Parsing json array``() =
+        let text = """[1, 2, 3, 4]"""
+        let expected = JsonArray [JsonNumber 1.; JsonNumber 2.; JsonNumber 3.; JsonNumber 4.]
+        Assert.AreEqual(Success(expected, []), (Run JsonParser text))                       

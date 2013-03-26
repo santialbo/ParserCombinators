@@ -2,17 +2,19 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="ParserCombinators/Core.fs">
     <Files>
-      <File FileName="ParserCombinators/Core.fs" Line="93" Column="34" />
-      <File FileName="ParserCombinators/Json.fs" Line="25" Column="24" />
-      <File FileName="ParserCombinators/Tests.Core.fs" Line="18" Column="44" />
-      <File FileName="ParserCombinators/Tests.Json.fs" Line="53" Column="50" />
+      <File FileName="ParserCombinators/Core.fs" Line="192" Column="1" />
+      <File FileName="ParserCombinators/Json.fs" Line="1" Column="1" />
+      <File FileName="ParserCombinators/Tests.Core.fs" Line="1" Column="1" />
+      <File FileName="ParserCombinators/Tests.Json.fs" Line="1" Column="1" />
+      <File FileName="ParserCombinators/Program.fs" Line="16" Column="6" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="ParserCombinators" expanded="True">
-            <Node name="References" expanded="True" />
-            <Node name="Core.fs" selected="True" />
+            <Node name="References" expanded="True">
+              <Node name="System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" selected="True" />
+            </Node>
           </Node>
         </State>
       </Pad>
@@ -27,9 +29,14 @@
           <Node name="ParserCombinators" expanded="True">
             <Node name="ParserCombinators" expanded="True">
               <Node name="Tests" expanded="True">
+                <Node name="Core+Escaped characters parsing" expanded="True" />
+                <Node name="Core+Float parsing" expanded="True" />
                 <Node name="Json+Boolean parsing" expanded="True" />
                 <Node name="Json+Json escaped string parsing" expanded="True" />
-                <Node name="Json+Json key names parsing" selected="True" />
+                <Node name="Json+Json key-value pair parsing" expanded="True" />
+                <Node name="Json+Json object parsing" expanded="True">
+                  <Node name="Parsing object with 1 key-value pair" selected="True" />
+                </Node>
               </Node>
             </Node>
           </Node>

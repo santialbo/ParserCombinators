@@ -76,3 +76,6 @@ JsonValueParserRef :=
             EscapedStringParser;
             JsonArrayParser;
             JsonObjectParser] .>> WhiteSpaceParser
+
+// Parses a Json string.
+let JsonParser = JsonObjectParser <|> JsonArrayParser
