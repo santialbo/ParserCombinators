@@ -45,13 +45,15 @@ let (.>>) p1 p2 : Parser<'a> =
 let (.>>.) p1 p2: Parser<'a*'b> =
     p1 >>= (fun x -> p2 >>= (fun y -> preturn (x, y)))
 
+/// Applies the first parser and if it fails, applies the second one.
 let (<|>) (p1: Parser<'a>) (p2: Parser<'a>) : Parser<'a> =
     let p stream =
         match p1 stream with
         | Failure -> p2 stream
         | res -> res
     in p
-
+    
+/// If p is successful applies f to the parsed element.
 let (|>>) p f : Parser<'b> =
     p >>= (fun x -> preturn (f x))
 
