@@ -186,7 +186,7 @@ let FloatParser: Parser<float> =
         let! e = (parse {
             let! e = CharParser 'e' <|> CharParser 'E'                    // ([eE]
             let! s = (CharParser '+' <|> CharParser '-') <|> preturn '+'  //   [+-]?
-            let! x = Many1 (CharParserF (fun c -> c >= '0' && c <= '9'))  //   \d+
+            let! x = Many1 (DigitParser)                                  //   \d+
             return e::s::x                                                //         )?
         } <|> preturn [])
         return float (new System.String(s::(l @ e) |> List.toArray))
